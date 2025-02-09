@@ -2939,6 +2939,35 @@ function S() {
   window.innerHeight > 400 && L();
 }),
   L();
+
+
+  async function saveSession(sessionId, revealedAyah, markedWords, unmarkedWords) {
+      try {
+        const response = await fetch('/save-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ sessionId, revealedAyah, markedWords, unmarkedWords }),
+        });
+
+        if (response.ok) {
+          console.log('Session saved successfully');
+        } else {
+          console.error('Error saving session');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    // Example usage
+    const sessionId = 'user123';
+    const revealedAyah = ['ayah1', 'ayah2'];
+    const markedWords = ['word1', 'word2'];
+    const unmarkedWords = ['word3', 'word4'];
+
+    saveSession(sessionId, revealedAyah, markedWords, unmarkedWords);
 </script>
 <svg style="display: none" aria-hidden=true>
     <defs>

@@ -5,18 +5,40 @@ const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const username = encodeURIComponent("mansw78");
+const password = encodeURIComponent("MpYbUL14aAm9tRc3");
 // mongodb+srv://mansw78:MpYbUL14aAm9tRc3@mshftest.ie0jx.mongodb.net/?retryWrites=true&w=majority&appName=MSHFTest
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/mushaf', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((error) => {
-  console.error('Error connecting to MongoDB:', error);
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://mansw78:MpYbUL14aAm9tRc3@mshftest.ie0jx.mongodb.net/?retryWrites=true&w=majority&appName=MSHFTest";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
-// Session schema
+async function run() {
+  try {
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log("Connected successfully to server");
+
+    const database = client.db("mhftest");
+    console.log("Connected successfully to mhftest");
+    const ratings = database.collection("collection1");
+    console.log("Connected successfully to collection1");
+    const cursor = ratings.find();
+    await cursor.forEach(doc => console.dir(doc));
+  } finally {
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
 const sessionSchema = new mongoose.Schema({
   sessionId: String,
   revealedAyah: [String],
@@ -35,8 +57,7 @@ app.use(
     secret: 'your_secret_key',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: 'mongodb+srv://mansw78:MpYbUL14aAm9tRc3@mshftest.ie0jx.mongodb.net/?retryWrites=true&w=majority&appName=MSHFTest' }),
-  })
+     }),
 );
 
 // Route to save session data
@@ -64,4 +85,4 @@ app.post('/save-session', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-});
+}); 

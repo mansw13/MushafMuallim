@@ -2939,7 +2939,11 @@ function S() {
   window.innerHeight > 400 && L();
 }),
   L();
-
+sessionId = 'user123';
+revealedAyah = ['ayah1', 'ayah2'];
+markedWords = ['word1', 'word2'];
+unmarkedWords = ['word3', 'word4'];
+saveSession(sessionId, revealedAyah, markedWords, unmarkedWords);
 
   async function saveSession(sessionId, revealedAyah, markedWords, unmarkedWords) {
       try {

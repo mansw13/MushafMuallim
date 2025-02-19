@@ -2678,6 +2678,7 @@ function f(p) {
     !(function(p, e, t) {
       _.words[e] || (_.words[e] = new Set());
       _.words[e][p](t), localStorage.setItem(filename + "state", JSON.stringify(_, o));
+//      _.words[e][p](t), saveSession({userId, inputData});
     })(p ? "delete" : "add", _.page, +e.dataset.wid),
       e.classList.toggle("word-marked", !p);
   }
@@ -2910,9 +2911,40 @@ const _ = {
       localStorage.setItem(filename + "state", JSON.stringify(_, o)),
       t < 604 && !b.has(t + 1) && k(t + 1),
       t > 1 && !b.has(t - 1) && k(t - 1);
+      const inputData = JSON.stringify(_,o);
+
+     saveSession({userId,inputData});
   },
   words: {},
 };
+  //--------------------------->>>>>>>>>User ID
+  const userId = '0001'
+  
+
+async function saveSession(userId, inputData) {
+
+var resposeClone;
+
+    try {            
+      const response = await fetch('http://localhost:3000/save-session', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({userId, inputData}),
+
+      });
+
+      if (response.ok) {
+        console.log('Session saved successfully');
+      } else {
+        console.error('Error saving session');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+
 function E(p) {
   let e = JSON.parse(p);
   e.words &&
@@ -2939,39 +2971,7 @@ function S() {
   window.innerHeight > 400 && L();
 }),
   L();
-sessionId = 'user123';
-revealedAyah = ['ayah1', 'ayah2'];
-markedWords = ['word1', 'word2'];
-unmarkedWords = ['word3', 'word4'];
-saveSession(sessionId, revealedAyah, markedWords, unmarkedWords);
-
-  async function saveSession(sessionId, revealedAyah, markedWords, unmarkedWords) {
-      try {
-        const response = await fetch('/save-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ sessionId, revealedAyah, markedWords, unmarkedWords }),
-        });
-
-        if (response.ok) {
-          console.log('Session saved successfully');
-        } else {
-          console.error('Error saving session');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    // Example usage
-    const sessionId = 'user123';
-    const revealedAyah = ['ayah1', 'ayah2'];
-    const markedWords = ['word1', 'word2'];
-    const unmarkedWords = ['word3', 'word4'];
-
-    saveSession(sessionId, revealedAyah, markedWords, unmarkedWords);
+    
 </script>
 <svg style="display: none" aria-hidden=true>
     <defs>
